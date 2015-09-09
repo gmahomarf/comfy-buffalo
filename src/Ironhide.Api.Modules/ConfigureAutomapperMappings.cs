@@ -8,6 +8,16 @@ using Ironhide.Users.Domain.Entities;
 
 namespace Ironhide.Api.Modules
 {
+    public class GetValueRequests
+    {
+        public GetValueRequests(Guid guid)
+        {
+            Guid = guid;
+        }
+
+        public Guid Guid { get; private set; }
+    }
+
     public class ConfigureAutomapperMappings : IBootstrapperTask<ContainerBuilder>
     {
         #region IBootstrapperTask<ContainerBuilder> Members

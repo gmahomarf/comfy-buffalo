@@ -149,28 +149,6 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ironhide.Api.Modules\Ironhide.Api.Modules.csproj">
-      <Project>{ab5a64bd-681c-409e-b7cd-3430b666caf0}</Project>
-      <Name>Ironhide.Api.Modules</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ironhide.Data\Ironhide.Data.csproj">
-      <Project>{828BB611-5955-47C0-AB91-32374D8506E2}</Project>
-      <Name>Ironhide.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ironhide.Domain\Ironhide.Users.Domain.csproj">
-      <Project>{2BEE7A33-DCB7-4F9C-B45C-A7DAC69AEB52}</Project>
-      <Name>Ironhide.Users.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ironhide.EmailClients.DotNet\Ironhide.EmailClients.DotNet.csproj">
-      <Project>{B85057A5-F5AA-4397-85A3-EF3F21AEA76D}</Project>
-      <Name>Ironhide.EmailClients.DotNet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ironhide.TemplateEngines.Razor\Ironhide.TemplateEngines.Razor.csproj">
-      <Project>{EABDB5FE-FD37-4C87-BD52-67D7D996CA03}</Project>
-      <Name>Ironhide.TemplateEngines.Razor</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -88,10 +88,6 @@
       <Project>{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}</Project>
       <Name>Ironhide.Api.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ironhide.Api.Modules\Ironhide.Api.Modules.csproj">
-      <Project>{AB5A64BD-681C-409E-B7CD-3430B666CAF0}</Project>
-      <Name>Ironhide.Api.Modules</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ironhide.Domain\Ironhide.Users.Domain.csproj">
       <Project>{2BEE7A33-DCB7-4F9C-B45C-A7DAC69AEB52}</Project>
       <Name>Ironhide.Users.Domain</Name>

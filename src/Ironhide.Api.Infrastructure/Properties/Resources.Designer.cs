@@ -59,15 +59,5 @@ namespace Ironhide.Api.Infrastructure.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        public static byte[] RolesFeatures {
-            get {
-                object obj = ResourceManager.GetObject("RolesFeatures", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }
