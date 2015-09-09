@@ -1,0 +1,89 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Data", "Ironhide.Data\Ironhide.Data.csproj", "{828BB611-5955-47C0-AB91-32374D8506E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Users.Domain", "Ironhide.Domain\Ironhide.Users.Domain.csproj", "{2BEE7A33-DCB7-4F9C-B45C-A7DAC69AEB52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseDeployer", "DatabaseDeployer\DatabaseDeployer.csproj", "{7F8F5F26-6F21-4C0A-9183-9140CA894E50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{72ED1C0E-D185-4EF5-B897-5FB6FE6A4274}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Domain.Specs", "Ironhide.Domain.Specs\Ironhide.Domain.Specs.csproj", "{76EE1961-B5BF-4F77-8EE9-0545BD74A2B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Data.Specs", "Ironhide.Data.Specs\Ironhide.Data.Specs.csproj", "{172AA855-33FC-4A9D-ADEC-F17555C02072}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.TemplateEngines.Razor", "Ironhide.TemplateEngines.Razor\Ironhide.TemplateEngines.Razor.csproj", "{EABDB5FE-FD37-4C87-BD52-67D7D996CA03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.EmailClients.DotNet", "Ironhide.EmailClients.DotNet\Ironhide.EmailClients.DotNet.csproj", "{B85057A5-F5AA-4397-85A3-EF3F21AEA76D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Api.Modules", "Ironhide.Api.Modules\Ironhide.Api.Modules.csproj", "{AB5A64BD-681C-409E-B7CD-3430B666CAF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Api.Host", "Ironhide.Api.Host\Ironhide.Api.Host.csproj", "{EFD8559C-290D-45F6-A090-0ADE554A9065}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Api.Modules.Specs", "Ironhide.Api.Modules.Specs\Ironhide.Api.Modules.Specs.csproj", "{1E1E8DFC-FF92-4FB3-A2A6-ED5744129EC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Api.Infrastructure", "Ironhide.Api.Infrastructure\Ironhide.Api.Infrastructure.csproj", "{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{828BB611-5955-47C0-AB91-32374D8506E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{828BB611-5955-47C0-AB91-32374D8506E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{828BB611-5955-47C0-AB91-32374D8506E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{828BB611-5955-47C0-AB91-32374D8506E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BEE7A33-DCB7-4F9C-B45C-A7DAC69AEB52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BEE7A33-DCB7-4F9C-B45C-A7DAC69AEB52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BEE7A33-DCB7-4F9C-B45C-A7DAC69AEB52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BEE7A33-DCB7-4F9C-B45C-A7DAC69AEB52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F8F5F26-6F21-4C0A-9183-9140CA894E50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F8F5F26-6F21-4C0A-9183-9140CA894E50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F8F5F26-6F21-4C0A-9183-9140CA894E50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F8F5F26-6F21-4C0A-9183-9140CA894E50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76EE1961-B5BF-4F77-8EE9-0545BD74A2B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76EE1961-B5BF-4F77-8EE9-0545BD74A2B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76EE1961-B5BF-4F77-8EE9-0545BD74A2B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76EE1961-B5BF-4F77-8EE9-0545BD74A2B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{172AA855-33FC-4A9D-ADEC-F17555C02072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{172AA855-33FC-4A9D-ADEC-F17555C02072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{172AA855-33FC-4A9D-ADEC-F17555C02072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{172AA855-33FC-4A9D-ADEC-F17555C02072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EABDB5FE-FD37-4C87-BD52-67D7D996CA03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EABDB5FE-FD37-4C87-BD52-67D7D996CA03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EABDB5FE-FD37-4C87-BD52-67D7D996CA03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EABDB5FE-FD37-4C87-BD52-67D7D996CA03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B85057A5-F5AA-4397-85A3-EF3F21AEA76D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B85057A5-F5AA-4397-85A3-EF3F21AEA76D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B85057A5-F5AA-4397-85A3-EF3F21AEA76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B85057A5-F5AA-4397-85A3-EF3F21AEA76D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB5A64BD-681C-409E-B7CD-3430B666CAF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB5A64BD-681C-409E-B7CD-3430B666CAF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB5A64BD-681C-409E-B7CD-3430B666CAF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB5A64BD-681C-409E-B7CD-3430B666CAF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFD8559C-290D-45F6-A090-0ADE554A9065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFD8559C-290D-45F6-A090-0ADE554A9065}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFD8559C-290D-45F6-A090-0ADE554A9065}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFD8559C-290D-45F6-A090-0ADE554A9065}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E1E8DFC-FF92-4FB3-A2A6-ED5744129EC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E1E8DFC-FF92-4FB3-A2A6-ED5744129EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E1E8DFC-FF92-4FB3-A2A6-ED5744129EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E1E8DFC-FF92-4FB3-A2A6-ED5744129EC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{76EE1961-B5BF-4F77-8EE9-0545BD74A2B7} = {72ED1C0E-D185-4EF5-B897-5FB6FE6A4274}
+		{172AA855-33FC-4A9D-ADEC-F17555C02072} = {72ED1C0E-D185-4EF5-B897-5FB6FE6A4274}
+		{1E1E8DFC-FF92-4FB3-A2A6-ED5744129EC5} = {72ED1C0E-D185-4EF5-B897-5FB6FE6A4274}
+	EndGlobalSection
+EndGlobal

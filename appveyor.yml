@@ -1,0 +1,48 @@
+environment:
+  environment: dev
+version: 1.0.{build}
+branches:
+  only:
+    - develop
+init:
+  - git config --global core.autocrlf input
+install:
+  - npm -g install npm@2
+  - npm install -g gulp
+  - npm install
+  - nuget sources
+nuget:
+  account_feed: true
+  disable_publish_on_pr: true
+cache:
+  - lib -> src\**\packages.config
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "{version}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
+after_build:
+  - gulp package
+build_script:  
+  - gulp build  
+test:
+  assemblies:
+    - specs\**\*.Specs.dll
+artifacts:
+  # - path: deploy\Rewardle.Accounts.ViewStoreRebuilder*.zip
+  #   name: accounts_viewStoreRebuilder
+  - path: deploy\**\*.nupkg
+    name: nugetPackages
+
+deploy:
+  # - provider: Environment
+  #   name: Rewardle.Dev
+  #   artifacts: accounts_eventStoreRebuilder, accounts_viewStoreRebuilder, accounts_events, accounts_commands, accounts_api
+
+before_deploy:
+  - gulp deploy-nuget
+
+notifications:
+  - provider: Webhook
+    url: http://appharborservicehookendpoint.apphb.com/build/appveyor/jazz

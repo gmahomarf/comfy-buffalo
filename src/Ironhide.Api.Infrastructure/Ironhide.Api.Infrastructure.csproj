@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ironhide.Api.Infrastructure</RootNamespace>
+    <AssemblyName>Ironhide.Api.Infrastructure</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AcklenAvenue.Commands">
+      <HintPath>..\..\lib\AcklenAvenue.Commands.1.0.2.12\lib\net45\AcklenAvenue.Commands.dll</HintPath>
+    </Reference>
+    <Reference Include="AcklenAvenue.Data">
+      <HintPath>..\..\lib\AcklenAvenue.Data.2.0.2.3\lib\net40\AcklenAvenue.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="AcklenAvenue.Data.NHibernate">
+      <HintPath>..\..\lib\AcklenAvenue.Data.NHibernate.2.0.2.3\lib\net40\AcklenAvenue.Data.NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="AcklenAvenue.Email">
+      <HintPath>..\..\lib\AcklenAvenue.Email.1.0.0.2\lib\net45\AcklenAvenue.Email.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper">
+      <HintPath>..\..\lib\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="BlingBag">
+      <HintPath>..\..\lib\BlingBag.1.4.0.14\lib\net45\BlingBag.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\..\lib\FluentNHibernate.2.0.1.0\lib\net40\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\lib\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\lib\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy">
+      <HintPath>..\..\lib\Nancy.1.2.0\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Authentication.Stateless">
+      <HintPath>..\..\lib\Nancy.Authentication.Stateless.1.2.0\lib\net40\Nancy.Authentication.Stateless.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Bootstrappers.Autofac">
+      <HintPath>..\..\lib\Nancy.Bootstrappers.Autofac.1.2.0\lib\net40\Nancy.Bootstrappers.Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\lib\NHibernate.4.0.0.4000\lib\net40\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
+      <HintPath>..\..\lib\System.IdentityModel.Tokens.Jwt.4.0.2.206221351\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Authentication\IApiUserMapper.cs" />
+    <Compile Include="Authentication\LoggedInUserIdentity.cs" />
+    <Compile Include="Authentication\MenuProvider.cs" />
+    <Compile Include="Authentication\Roles\Feature.cs" />
+    <Compile Include="Authentication\Roles\UsersRoles.cs" />
+    <Compile Include="BaseUrlProvider.cs" />
+    <Compile Include="Configuration\ApiUserMapper.cs" />
+    <Compile Include="Configuration\Bootstrapper.cs" />
+    <Compile Include="Configuration\CommandDispatcherLogger.cs" />
+    <Compile Include="Configuration\ConfigureCommonDependencies.cs" />
+    <Compile Include="Configuration\ConfigureDatabaseWiring.cs" />
+    <Compile Include="Configuration\IronhideBlingDispatcher.cs" />
+    <Compile Include="Configuration\UnitOfWorkCommandDispatcher.cs" />
+    <Compile Include="IBaseUrlProvider.cs" />
+    <Compile Include="IBootstrapperTask.cs" />
+    <Compile Include="IMenuProvider.cs" />
+    <Compile Include="IUserSessionFactory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="RestExceptions\BadRequestExceptionRepackager.cs" />
+    <Compile Include="RestExceptions\CommandValidationExceptionRepackager.cs" />
+    <Compile Include="RestExceptions\ErrorResponse.cs" />
+    <Compile Include="RestExceptions\HttpErrorBody.cs" />
+    <Compile Include="RestExceptions\IExceptionRepackager.cs" />
+    <Compile Include="RestExceptions\InternalServerExceptionRepackager.cs" />
+    <Compile Include="RestExceptions\NoCurrentUserException.cs" />
+    <Compile Include="RestExceptions\NotFoundExceptionRepackager.cs" />
+    <Compile Include="RestExceptions\NotImplementedExceptionRepackager.cs" />
+    <Compile Include="RestExceptions\ResponseBodyExtensions.cs" />
+    <Compile Include="RestExceptions\RestExceptionConfiguration.cs" />
+    <Compile Include="RestExceptions\RestExceptionRepackager.cs" />
+    <Compile Include="RestExceptions\RestExceptionRepackagingRegistrar.cs" />
+    <Compile Include="RestExceptions\RoleNotFound.cs" />
+    <Compile Include="RestExceptions\TokenDoesNotExistException.cs" />
+    <Compile Include="RestExceptions\TokenExpiredException.cs" />
+    <Compile Include="RestExceptions\UnauthorizedExceptionRepackager.cs" />
+    <Compile Include="RestExceptions\UserInputPropertyMissingException.cs" />
+    <Compile Include="UserSessionFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Authentication\RolesFeatures.json" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ironhide.Data\Ironhide.Data.csproj">
+      <Project>{828BB611-5955-47C0-AB91-32374D8506E2}</Project>
+      <Name>Ironhide.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironhide.Domain\Ironhide.Users.Domain.csproj">
+      <Project>{2BEE7A33-DCB7-4F9C-B45C-A7DAC69AEB52}</Project>
+      <Name>Ironhide.Users.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironhide.EmailClients.DotNet\Ironhide.EmailClients.DotNet.csproj">
+      <Project>{B85057A5-F5AA-4397-85A3-EF3F21AEA76D}</Project>
+      <Name>Ironhide.EmailClients.DotNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironhide.TemplateEngines.Razor\Ironhide.TemplateEngines.Razor.csproj">
+      <Project>{EABDB5FE-FD37-4C87-BD52-67D7D996CA03}</Project>
+      <Name>Ironhide.TemplateEngines.Razor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

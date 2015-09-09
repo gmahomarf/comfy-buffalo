@@ -1,0 +1,24 @@
+﻿[
+        {
+            "Name": "Administrator",
+            "Features": [
+                {
+                    "Description": "ActivateDeactivateUsers"
+                    
+                },
+				{
+					"Description": "Home"
+				}
+              
+            ]
+        }, 
+        {
+            "Name": "Basic",
+            "Features": [
+                {
+					"Description": "Home"
+				}
+             
+            ]
+        }
+    ]
