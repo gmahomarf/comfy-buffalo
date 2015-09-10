@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Api.Host", "Ironhi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Api.Infrastructure", "Ironhide.Api.Infrastructure\Ironhide.Api.Infrastructure.csproj", "{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhide.Api.Specs", "Ironhide.Api.Specs\Ironhide.Api.Specs.csproj", "{9062FFEA-2B44-4B1B-B6FB-6FA45E798269}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3B743A1-FFF7-4EAF-80FA-2327AFE47D71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9062FFEA-2B44-4B1B-B6FB-6FA45E798269}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9062FFEA-2B44-4B1B-B6FB-6FA45E798269}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9062FFEA-2B44-4B1B-B6FB-6FA45E798269}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9062FFEA-2B44-4B1B-B6FB-6FA45E798269}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
