@@ -13,7 +13,7 @@ namespace Ironhide.Api.Host
     {
         const int MaxWords = 10;
         const decimal RequiredSuccessCountForWin = 20;
-        const double MillisecondsForWin = 2000;
+        const double MillisecondsForWin = 10000;
 
         static readonly List<GetValueRequests> GetValueRequests = new List<GetValueRequests>();
 
@@ -27,7 +27,7 @@ namespace Ironhide.Api.Host
             "healthy", "liquid", "flush", "after", "insurance", "beam", "harm", "shotgun", "business", "coal"
         };
 
-        readonly List<CandidateSuccess> _candidateSuccesses = new List<CandidateSuccess>();
+        readonly static List<CandidateSuccess> CandidateSuccesses = new List<CandidateSuccess>();
         readonly SuperSecretEncodingAlgorithm _encoder;
         readonly FibonacciGenerator _fibonacciGenerator;
         readonly Base64StringEncoder _base64Encoder;
@@ -52,28 +52,35 @@ namespace Ironhide.Api.Host
                 words.Add(AllWords[rnd.Next(0, AllWords.Length - 1)]);
             }
             var startingFibonacciNumber = GetRandomFibonacciStartingNumber();
-            GetValueRequests.Add(new GetValueRequests(guid, words, startingFibonacciNumber));
+            GetValueRequests.Add(new GetValueRequests(guid, words, Convert.ToInt64(startingFibonacciNumber)));
             return Response.AsJson(new {words, startingFibonacciNumber});
         }
 
         async Task<dynamic> PostValue(dynamic p)
         {
-            Guid guid = GetGuid((string) p.guid, Allow.Duplicates);
-            var reqBody = this.Bind<NewValueRequest>();
-            string candidateEncoded = reqBody.EncodedValue;
-            string emailAddress = reqBody.EmailAddress;
-            string webhookUrl = reqBody.WebhookUrl;
+            try
+            {
+                Guid guid = GetGuid((string)p.guid, Allow.Duplicates);
+                var reqBody = this.Bind<NewValueRequest>();
+                string candidateEncoded = reqBody.EncodedValue;
+                string emailAddress = reqBody.EmailAddress;
+                string webhookUrl = reqBody.WebhookUrl;
 
-            GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);
-            VerifyMatchingEncodedString(previousRequest, candidateEncoded);
-            AddSuccessToList(emailAddress, webhookUrl);
+                GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);
+                VerifyMatchingEncodedString(previousRequest, candidateEncoded);
+                AddSuccessToList(emailAddress, webhookUrl);
 
-            int recentSuccesses = RecentSuccesses(emailAddress);
-            bool isWinner = recentSuccesses >= RequiredSuccessCountForWin;
-            if (isWinner) await SendWebhook(webhookUrl);
-            string message = isWinner ? WinMessage() : SingleSuccessMessage(recentSuccesses);
-            PostAttempt status = isWinner ? PostAttempt.Winner : PostAttempt.Success;
-            return Response.AsJson(new {status, message});
+                int recentSuccesses = RecentSuccesses(emailAddress);
+                bool isWinner = recentSuccesses >= RequiredSuccessCountForWin;
+                if (isWinner) await SendWebhook(webhookUrl);
+                string message = isWinner ? WinMessage() : SingleSuccessMessage(recentSuccesses);
+                var status = (isWinner ? PostAttempt.Winner : PostAttempt.Success).ToString();
+                return Response.AsJson(new { status, message });
+            }
+            catch (CandidateRequestException ex)
+            {
+                return Response.AsJson(new {status = "CrashAndBurn", message = ex.Message}, HttpStatusCode.BadRequest);
+            }
         }
 
 
@@ -86,7 +93,7 @@ namespace Ironhide.Api.Host
 
         void AddSuccessToList(string emailAddress, string webhookUrl)
         {
-            _candidateSuccesses.Add(new CandidateSuccess(emailAddress, webhookUrl, DateTime.UtcNow));
+            CandidateSuccesses.Add(new CandidateSuccess(emailAddress, webhookUrl, DateTime.UtcNow));
         }
 
         void VerifyMatchingEncodedString(GetValueRequests previousRequest, string candidateEncoded)
@@ -120,7 +127,9 @@ namespace Ironhide.Api.Host
         {
             DateTime minimumWinTime = DateTime.UtcNow.AddMilliseconds(-1*MillisecondsForWin);
             IEnumerable<CandidateSuccess> recentSuccesses =
-                _candidateSuccesses.Where(x => x.EmailAddress == emailAddress && x.Time >= minimumWinTime);
+                CandidateSuccesses.Where(x => x.EmailAddress == emailAddress 
+                    //&& x.Time >= minimumWinTime
+                    );
 
             return recentSuccesses.Count();
         }
