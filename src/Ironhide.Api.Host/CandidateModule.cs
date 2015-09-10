@@ -13,7 +13,7 @@ namespace Ironhide.Api.Host
     {
         const int MaxWords = 10;
         const decimal RequiredSuccessCountForWin = 20;
-        const double MillisecondsForWin = 10000;
+        const double MillisecondsForWin = 5000;
 
         static readonly List<GetValueRequests> GetValueRequests = new List<GetValueRequests>();
 
@@ -128,8 +128,7 @@ namespace Ironhide.Api.Host
             DateTime minimumWinTime = DateTime.UtcNow.AddMilliseconds(-1*MillisecondsForWin);
             IEnumerable<CandidateSuccess> recentSuccesses =
                 CandidateSuccesses.Where(x => x.EmailAddress == emailAddress 
-                    //&& x.Time >= minimumWinTime
-                    );
+                    && x.Time >= minimumWinTime);
 
             return recentSuccesses.Count();
         }
@@ -137,7 +136,8 @@ namespace Ironhide.Api.Host
         async Task SendWebhook(string webhookUrl)
         {
             var client = new RestClient(webhookUrl);
-            var restRequest = new RestRequest();
+            var restRequest = new RestRequest() {RequestFormat = DataFormat.Json};
+            restRequest.AddHeader("Content-Type", "application/json");
             double randomFibonacciStartingNumber = GetRandomFibonacciStartingNumber();
             restRequest.AddBody(new
                                 {

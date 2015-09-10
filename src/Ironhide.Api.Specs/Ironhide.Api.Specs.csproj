@@ -60,6 +60,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CandidateApiTester.cs" />
+    <Compile Include="PostValueRequest.cs" />
+    <Compile Include="PostValueResponse.cs" />
+    <Compile Include="Values.cs" />
     <Compile Include="when_adding_delimiters_to_words.cs" />
     <Compile Include="when_alternating_caps_on_words_in_a_list.cs" />
     <Compile Include="when_base64_encoding_a_string.cs" />
@@ -69,6 +73,7 @@
     <Compile Include="when_generating_a_sequence_of_fibonacci_numbers.cs" />
     <Compile Include="when_getting_the_next_fibonacci_number_after_34.cs" />
     <Compile Include="when_shifting_vowels_to_the_right_in_a_list_of_words.cs" />
+    <Compile Include="when_trying_the_process_many_times.cs" />
     <Compile Include="when_trying_the_process_once.cs" />
   </ItemGroup>
   <ItemGroup>
