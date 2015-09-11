@@ -154,8 +154,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>IF NOT EXIST "$(ProjectDir)connectionStrings.config" copy "$(ProjectDir)connectionStrings.config.default" "$(ProjectDir)connectionStrings.config"
-IF NOT EXIST "$(ProjectDir)smtp.config" copy "$(ProjectDir)smtp.config.default" "$(ProjectDir)smtp.config"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
