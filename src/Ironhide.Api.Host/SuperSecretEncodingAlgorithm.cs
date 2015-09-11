@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,21 +8,23 @@ namespace Ironhide.Api.Host
     {
         readonly ICapsAlternator _capsAlternator;
         readonly IDelimiterAdder _delimiterAdder;
+        readonly IWordSplitter _wordSplitter;
         readonly IVowelEncoder _vowelEncoder;
         readonly IVowelShifter _vowelShifter;
 
-        public SuperSecretEncodingAlgorithm(IVowelEncoder vowelEncoder, IVowelShifter vowelShifter,
-            ICapsAlternator capsAlternator, IDelimiterAdder delimiterAdder)
+        public SuperSecretEncodingAlgorithm(IVowelEncoder vowelEncoder, IVowelShifter vowelShifter, ICapsAlternator capsAlternator, IDelimiterAdder delimiterAdder, IWordSplitter wordSplitter)
         {
             _vowelEncoder = vowelEncoder;
             _vowelShifter = vowelShifter;
             _capsAlternator = capsAlternator;
             _delimiterAdder = delimiterAdder;
+            _wordSplitter = wordSplitter;
         }
 
-        public string Encode(double startingNumber, string[] words)
+        public string Encode(Int64 startingNumber, string[] words)
         {
-            List<string> alphebeticalOrder = words.OrderBy(x => x).ToList();
+            IEnumerable<string> newListWithSplitWords = _wordSplitter.SplitWords(words);
+            IOrderedEnumerable<string> alphebeticalOrder = newListWithSplitWords.OrderBy(x => x);
             IEnumerable<string> listWithVowelsShifted = _vowelShifter.ShiftRight(alphebeticalOrder, 1);
             IEnumerable<string> vowelsEncoded = _vowelEncoder.Encode(startingNumber, listWithVowelsShifted);
             IEnumerable<string> consonantsCapsAlternated = _capsAlternator.Alternate(vowelsEncoded);

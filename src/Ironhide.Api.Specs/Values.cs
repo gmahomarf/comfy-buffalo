@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Ironhide.Api.Specs
@@ -5,6 +6,6 @@ namespace Ironhide.Api.Specs
     public class Values
     {
         public List<string> Words { get; set; }
-        public double StartingFibonacciNumber { get; set; }
+        public Int64 StartingFibonacciNumber { get; set; }
     }
 }

@@ -9,11 +9,24 @@ using RestSharp;
 
 namespace Ironhide.Api.Host
 {
+    public class StaticDictionary : IEnglishDictionary
+    {
+        readonly string[] words = new[]
+                         {
+                             "cats", "rule", "dogs", "drool", "clean", "code", "materials", "needed", "this", "is", "hard",
+                             "what", "are", "you", "smoking", "shot", "gun", "down", "river", "super", "man"
+                         };
+
+        public bool IsEnglishWord(string word)
+        {
+            return words.Select(x => x.ToLower()).Contains(word.Trim().ToLower());
+        }
+    }
     public class CandidateModule : NancyModule
     {
         const int MaxWords = 10;
         const decimal RequiredSuccessCountForWin = 20;
-        const double MillisecondsForWin = 5000;
+        const double MillisecondsForWin = 10000;
 
         static readonly List<GetValueRequests> GetValueRequests = new List<GetValueRequests>();
 
@@ -22,7 +35,7 @@ namespace Ironhide.Api.Host
             "ashuph", "goohee", "nygnas", "sherga", "cowhyw", "eerdox", "lekops", "gledsy",
             "iwefty", "yjyltu", "olapev", "ooptyn", "oansol", "xezyms", "eeping", "suckyj",
             "divorce", "frequent", "drown", "sharp", "blushing", "communication", "decoder", "internal", "column",
-            "agreeable",
+            "agreeable", "catsruledogsdrool", "cleancode", "materialsneeded", "thisishard", "whatareyousmoking",
             "pharaoh", "femur", "bird", "frightening", "bat", "gum", "gobbling", "diplomatic", "downriver",
             "healthy", "liquid", "flush", "after", "insurance", "beam", "harm", "shotgun", "business", "coal"
         };
@@ -31,10 +44,12 @@ namespace Ironhide.Api.Host
         readonly SuperSecretEncodingAlgorithm _encoder;
         readonly FibonacciGenerator _fibonacciGenerator;
         readonly Base64StringEncoder _base64Encoder;
+        readonly CapsAlternator _capsAlternator;
 
         public CandidateModule()
         {
-            _encoder = new SuperSecretEncodingAlgorithm(new VowelEncoder(new FibonacciGenerator()), new VowelShifter(), new CapsAlternator(), new AsciiValueDelimiterAdder());
+            _capsAlternator = new CapsAlternator();
+            _encoder = new SuperSecretEncodingAlgorithm(new VowelEncoder(new FibonacciGenerator()), new VowelShifter(), _capsAlternator, new AsciiValueDelimiterAdder(), new WordSplitter(new StaticDictionary()));
             _fibonacciGenerator = new FibonacciGenerator();
             _base64Encoder = new Base64StringEncoder();
 
@@ -49,7 +64,7 @@ namespace Ironhide.Api.Host
             var words = new List<string>();
             for (int i = 0; i < MaxWords; i++)
             {
-                words.Add(AllWords[rnd.Next(0, AllWords.Length - 1)]);
+                words.Add(_capsAlternator.Alternate(AllWords).ToArray()[rnd.Next(0, AllWords.Length - 1)]);
             }
             var startingFibonacciNumber = GetRandomFibonacciStartingNumber();
             GetValueRequests.Add(new GetValueRequests(guid, words, Convert.ToInt64(startingFibonacciNumber)));
@@ -157,5 +172,5 @@ namespace Ironhide.Api.Host
                 throw new CandidateRequestException();
             return guid;
         }
-    }
+    }    
 }

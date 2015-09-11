@@ -73,6 +73,7 @@
     <Compile Include="when_generating_a_sequence_of_fibonacci_numbers.cs" />
     <Compile Include="when_getting_the_next_fibonacci_number_after_34.cs" />
     <Compile Include="when_shifting_vowels_to_the_right_in_a_list_of_words.cs" />
+    <Compile Include="when_splitting_words_from_an_array_with_multiple_words_in_same_value.cs" />
     <Compile Include="when_trying_the_process_many_times.cs" />
     <Compile Include="when_trying_the_process_once.cs" />
   </ItemGroup>

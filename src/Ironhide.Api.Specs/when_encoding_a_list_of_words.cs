@@ -16,10 +16,10 @@ namespace Ironhide.Api.Specs
             () =>
             {
                 _encodingAlgorithm = new SuperSecretEncodingAlgorithm(new VowelEncoder(new FibonacciGenerator()),
-                    new VowelShifter(), new CapsAlternator(), new AsciiValueDelimiterAdder());
-                _listOfWords = new[] {"don", "byron", "sommardahl"};
+                    new VowelShifter(), new CapsAlternator(), new AsciiValueDelimiterAdder(), new WordSplitter(new StaticDictionary()));
+                _listOfWords = new[] {"superman", "don", "byron", "sommardahl"};
                 _firstFibonacciNumber = 3;
-                _expectedEncodedString = string.Join("", new[] { "Sm13Mr21Dh34L", "98", "Dn8", "83", "bR3n5", "68" });
+                _expectedEncodedString = string.Join("", new[] { "sP89r144", "98", "Sm21Mr34Dh55L", "115", "Mn13", "83", "Dn8", "77", "bR3n5", "68" });
             };
 
         Because of =

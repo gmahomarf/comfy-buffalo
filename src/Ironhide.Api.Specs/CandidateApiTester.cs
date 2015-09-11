@@ -16,11 +16,11 @@ namespace Ironhide.Api.Specs
             restRequest.AddHeader("Content-Type", "application/json");                        
             IRestResponse<Values> getValuesResponse = client.Get<Values>(restRequest);
             List<string> words = getValuesResponse.Data.Words;
-            double startingFibonacciNumber = getValuesResponse.Data.StartingFibonacciNumber;
+            Int64 startingFibonacciNumber = getValuesResponse.Data.StartingFibonacciNumber;
 
             var encoder =
                 new SuperSecretEncodingAlgorithm(new VowelEncoder(new FibonacciGenerator()),
-                    new VowelShifter(), new CapsAlternator(), new AsciiValueDelimiterAdder());
+                    new VowelShifter(), new CapsAlternator(), new AsciiValueDelimiterAdder(), new WordSplitter(new StaticDictionary()));
 
             string encode = encoder.Encode(startingFibonacciNumber, words.ToArray());
             string s = new Base64StringEncoder().Encode(encode);

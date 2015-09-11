@@ -89,10 +89,12 @@
     <Compile Include="ICapsAlternator.cs" />
     <Compile Include="IDelimiterAdder.cs" />
     <Compile Include="IEncodingAlgorithm.cs" />
+    <Compile Include="IEnglishDictionary.cs" />
     <Compile Include="INumberSeriesGenerator.cs" />
     <Compile Include="IStringEncoder.cs" />
     <Compile Include="IVowelEncoder.cs" />
     <Compile Include="IVowelShifter.cs" />
+    <Compile Include="IWordSplitter.cs" />
     <Compile Include="NewValueRequest.cs" />
     <Compile Include="PostAttempt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="SuperSecretEncodingAlgorithm.cs" />
     <Compile Include="VowelEncoder.cs" />
     <Compile Include="VowelShifter.cs" />
+    <Compile Include="WordSplitter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
