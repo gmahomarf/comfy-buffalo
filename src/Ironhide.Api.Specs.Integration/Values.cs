@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Ironhide.Api.Specs
+namespace Ironhide.Api.Specs.Integration
 {
     public class Values
     {

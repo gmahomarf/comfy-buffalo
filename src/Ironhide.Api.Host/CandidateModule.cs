@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Nancy;
 using Nancy.ModelBinding;
@@ -11,17 +10,18 @@ namespace Ironhide.Api.Host
 {
     public class StaticDictionary : IEnglishDictionary
     {
-        readonly string[] words = new[]
-                         {
-                             "cats", "rule", "dogs", "drool", "clean", "code", "materials", "needed", "this", "is", "hard",
-                             "what", "are", "you", "smoking", "shot", "gun", "down", "river", "super", "man"
-                         };
+        readonly string[] words =
+        {
+            "cats", "rule", "dogs", "drool", "clean", "code", "materials", "needed", "this", "is", "hard",
+            "what", "are", "you", "smoking", "shot", "gun", "down", "river", "super", "man"
+        };
 
         public bool IsEnglishWord(string word)
         {
             return words.Select(x => x.ToLower()).Contains(word.Trim().ToLower());
         }
     }
+
     public class CandidateModule : NancyModule
     {
         const int MaxWords = 10;
@@ -40,18 +40,22 @@ namespace Ironhide.Api.Host
             "healthy", "liquid", "flush", "after", "insurance", "beam", "harm", "shotgun", "business", "coal"
         };
 
-        readonly static List<CandidateSuccess> CandidateSuccesses = new List<CandidateSuccess>();
-        readonly SuperSecretEncodingAlgorithm _encoder;
-        readonly FibonacciGenerator _fibonacciGenerator;
+        static readonly List<CandidateSuccess> CandidateSuccesses = new List<CandidateSuccess>();
+        static readonly List<Winner> Winners = new List<Winner>();
         readonly Base64StringEncoder _base64Encoder;
         readonly CapsAlternator _capsAlternator;
+        readonly SuperSecretEncodingAlgorithm _encoder;
+        readonly FibonacciGenerator _fibonacciGenerator;
+        readonly IHiringTeamNotifier _notifier;
 
         public CandidateModule()
         {
             _capsAlternator = new CapsAlternator();
-            _encoder = new SuperSecretEncodingAlgorithm(new VowelEncoder(new FibonacciGenerator()), new VowelShifter(), _capsAlternator, new AsciiValueDelimiterAdder(), new WordSplitter(new StaticDictionary()));
+            _encoder = new SuperSecretEncodingAlgorithm(new VowelEncoder(new FibonacciGenerator()), new VowelShifter(),
+                _capsAlternator, new AsciiValueDelimiterAdder(), new WordSplitter(new StaticDictionary()));
             _fibonacciGenerator = new FibonacciGenerator();
             _base64Encoder = new Base64StringEncoder();
+            _notifier = new SlackHiringTeamNotifications();
 
             Get["values/{guid}"] = p => GetValues(p);
             Post["values/{guid}", true] = async (p, ctx) => await PostValue(p);
@@ -66,7 +70,7 @@ namespace Ironhide.Api.Host
             {
                 words.Add(_capsAlternator.Alternate(AllWords).ToArray()[rnd.Next(0, AllWords.Length - 1)]);
             }
-            var startingFibonacciNumber = GetRandomFibonacciStartingNumber();
+            double startingFibonacciNumber = GetRandomFibonacciStartingNumber();
             GetValueRequests.Add(new GetValueRequests(guid, words, Convert.ToInt64(startingFibonacciNumber)));
             return Response.AsJson(new {words, startingFibonacciNumber});
         }
@@ -75,11 +79,19 @@ namespace Ironhide.Api.Host
         {
             try
             {
-                Guid guid = GetGuid((string)p.guid, Allow.Duplicates);
+                Guid guid = GetGuid((string) p.guid, Allow.Duplicates);
                 var reqBody = this.Bind<NewValueRequest>();
+
                 string candidateEncoded = reqBody.EncodedValue;
+                if (string.IsNullOrEmpty(candidateEncoded)) throw new ArgumentNullException("encodedValue");
                 string emailAddress = reqBody.EmailAddress;
+                if (string.IsNullOrEmpty(emailAddress)) throw new ArgumentNullException("emailAddress");
                 string webhookUrl = reqBody.WebhookUrl;
+                if (string.IsNullOrEmpty(webhookUrl)) throw new ArgumentNullException("webhookUrl");
+                string name = reqBody.Name;
+                if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
+                string repoUrl = reqBody.RepoUrl;
+                if (string.IsNullOrEmpty(repoUrl)) throw new ArgumentNullException("repoUrl");
 
                 GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);
                 VerifyMatchingEncodedString(previousRequest, candidateEncoded);
@@ -87,10 +99,21 @@ namespace Ironhide.Api.Host
 
                 int recentSuccesses = RecentSuccesses(emailAddress);
                 bool isWinner = recentSuccesses >= RequiredSuccessCountForWin;
-                if (isWinner) await SendWebhook(webhookUrl);
-                string message = isWinner ? WinMessage() : SingleSuccessMessage(recentSuccesses);
-                var status = (isWinner ? PostAttempt.Winner : PostAttempt.Success).ToString();
-                return Response.AsJson(new { status, message });
+                var repeatWinner =
+                    Winners.Any(x => x.EmailAddress == emailAddress && x.Time > DateTime.UtcNow.AddMinutes(-10));
+
+                if (isWinner && !repeatWinner)
+                {
+                    var randomFibonacciStartingNumber = GetRandomFibonacciStartingNumber().ToString();
+                    await SendWebhook(webhookUrl, randomFibonacciStartingNumber);
+                    var winner = new Winner(emailAddress, name, repoUrl, DateTime.UtcNow);
+                    await NotifyHiringTeam(winner, randomFibonacciStartingNumber);
+                    Winners.Add(winner);
+                }
+                string message = repeatWinner ? "Please wait 10 minutes before winning again to get the webhook post." : isWinner ? WinMessage() : SingleSuccessMessage(recentSuccesses);
+                string status = (isWinner ? PostAttempt.Winner : PostAttempt.Success).ToString();
+
+                return Response.AsJson(new {status, message});
             }
             catch (CandidateRequestException ex)
             {
@@ -98,10 +121,14 @@ namespace Ironhide.Api.Host
             }
         }
 
+        async Task NotifyHiringTeam(Winner winner, string secretCode)
+        {
+            await _notifier.Notify(winner.EmailAddress, winner.Name, winner.RepoUrl, secretCode);
+        }
 
         double GetRandomFibonacciStartingNumber()
         {
-            var numbers = _fibonacciGenerator.Generate(40).ToArray();
+            double[] numbers = _fibonacciGenerator.Generate(40).ToArray();
             var rnd = new Random();
             return numbers[rnd.Next(0, numbers.Count())];
         }
@@ -114,7 +141,7 @@ namespace Ironhide.Api.Host
         void VerifyMatchingEncodedString(GetValueRequests previousRequest, string candidateEncoded)
         {
             string ourEncoded = _encoder.Encode(previousRequest.StartingFibonacciNumber, previousRequest.Words.ToArray());
-            var b64Encoded = _base64Encoder.Encode(ourEncoded);
+            string b64Encoded = _base64Encoder.Encode(ourEncoded);
             bool candidateFailedToProvideCorrectEncodedString = candidateEncoded != b64Encoded;
             if (candidateFailedToProvideCorrectEncodedString) throw new CandidateRequestException();
         }
@@ -142,18 +169,17 @@ namespace Ironhide.Api.Host
         {
             DateTime minimumWinTime = DateTime.UtcNow.AddMilliseconds(-1*MillisecondsForWin);
             IEnumerable<CandidateSuccess> recentSuccesses =
-                CandidateSuccesses.Where(x => x.EmailAddress == emailAddress 
-                    && x.Time >= minimumWinTime);
+                CandidateSuccesses.Where(x => x.EmailAddress == emailAddress
+                                              && x.Time >= minimumWinTime);
 
             return recentSuccesses.Count();
         }
 
-        async Task SendWebhook(string webhookUrl)
+        async Task SendWebhook(string webhookUrl, string randomFibonacciStartingNumber)
         {
             var client = new RestClient(webhookUrl);
-            var restRequest = new RestRequest() {RequestFormat = DataFormat.Json};
+            var restRequest = new RestRequest {RequestFormat = DataFormat.Json};
             restRequest.AddHeader("Content-Type", "application/json");
-            double randomFibonacciStartingNumber = GetRandomFibonacciStartingNumber();
             restRequest.AddBody(new
                                 {
                                     secret = string.Format("{0} is the magic!", randomFibonacciStartingNumber)
@@ -163,7 +189,6 @@ namespace Ironhide.Api.Host
             await client.ExecutePostTaskAsync(restRequest);
         }
 
-        
         static Guid GetGuid(string guidString, Allow allow = Allow.OnlyUnique)
         {
             Guid guid;
@@ -172,5 +197,5 @@ namespace Ironhide.Api.Host
                 throw new CandidateRequestException();
             return guid;
         }
-    }    
+    }
 }

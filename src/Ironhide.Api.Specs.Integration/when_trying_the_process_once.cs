@@ -1,7 +1,7 @@
 using FluentAssertions;
 using Machine.Specifications;
 
-namespace Ironhide.Api.Specs
+namespace Ironhide.Api.Specs.Integration
 {
     public class when_trying_the_process_once
     {

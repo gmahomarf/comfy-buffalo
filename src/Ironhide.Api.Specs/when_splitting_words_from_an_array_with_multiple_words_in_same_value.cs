@@ -28,9 +28,6 @@ namespace Ironhide.Api.Specs
             () => _result = _splitter.SplitWords(new List<string> {"one", "twothree", "four", "fivesix"});
 
         It should_return_a_larger_list_with_words_split_out =
-            () =>
-            {
-                _result.ShouldBeEquivalentTo(new List<string> {"one", "two", "three", "four", "five", "six"});
-            };
+            () => _result.ShouldBeEquivalentTo(new List<string> {"one", "two", "three", "four", "five", "six"});
     }
 }

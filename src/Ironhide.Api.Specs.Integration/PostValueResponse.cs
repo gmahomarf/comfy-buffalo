@@ -1,4 +1,4 @@
-namespace Ironhide.Api.Specs
+namespace Ironhide.Api.Specs.Integration
 {
     public class PostValueResponse
     {

@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using Ironhide.Api.Host;
 using RestSharp;
 
-namespace Ironhide.Api.Specs
+namespace Ironhide.Api.Specs.Integration
 {
     public static class CandidateApiTester
     {
         public static PostValueResponse RunOnce()
         {
-            var client = new RestClient("http://localhost:6656");
+            string url = "http://localhost:6656";
+            //string url = "http://internal-comfybuffalo-1-dev.apphb.com";
+            var client = new RestClient(url);
             Guid guid = Guid.NewGuid();
             var restRequest = new RestRequest("/values/" + guid);
             restRequest.AddHeader("Accept", "application/json");
@@ -35,7 +37,10 @@ namespace Ironhide.Api.Specs
                             {
                                 EncodedValue = encode,
                                 EmailAddress = "byron@acklenavenue.com",
-                                WebhookUrl = "http://requestb.in/11qswdy1"
+                                WebhookUrl = "http://requestb.in/11qswdy1",
+                                RepoUrl= "http://github.com",
+                                Name= "Byron Sommardahl"
+
                             });
             IRestResponse<PostValueResponse> restResponse = client.Post<PostValueResponse>(request);
             return restResponse.Data;
