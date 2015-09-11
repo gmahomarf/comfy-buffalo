@@ -1,4 +1,0 @@
-﻿<connectionStrings>
-  <add name="local" connectionString="Data Source=.;Initial Catalog=Ironhide;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"></add>
-  <add name="qa" connectionString="Server=tcp:kbs9qidapp.database.windows.net,1433;Database=Ironhide;User ID=acklendev@kbs9qidapp;Password=y@rds@l3;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;"></add>
-</connectionStrings>
