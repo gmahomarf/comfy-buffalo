@@ -99,6 +99,7 @@
     <Compile Include="RootModule.cs" />
     <Compile Include="SlackHiringTeamNotifications.cs" />
     <Compile Include="SuperSecretEncodingAlgorithm.cs" />
+    <Compile Include="VerifyValueRequest.cs" />
     <Compile Include="VowelEncoder.cs" />
     <Compile Include="VowelShifter.cs" />
     <Compile Include="Winner.cs" />

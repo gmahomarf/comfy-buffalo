@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Nancy;
 using Nancy.ModelBinding;
@@ -59,6 +60,16 @@ namespace Ironhide.Api.Host
 
             Get["values/{guid}"] = p => GetValues(p);
             Post["values/{guid}", true] = async (p, ctx) => await PostValue(p);
+            Get["encoded/{guid}"] = p => VerifyValue(p);
+        }
+
+        dynamic VerifyValue(dynamic p)
+        {
+            Guid guid = GetGuid((string)p.guid, Allow.Duplicates);            
+            GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);
+            string ourEncoded = _encoder.Encode(previousRequest.StartingFibonacciNumber, previousRequest.Words.ToArray());
+            Thread.Sleep(5000);
+            return new {encoded = _base64Encoder.Encode(ourEncoded)};
         }
 
         dynamic GetValues(dynamic p)
@@ -193,7 +204,7 @@ namespace Ironhide.Api.Host
         {
             Guid guid;
             if (!Guid.TryParse(guidString, out guid)) throw new CandidateRequestException();
-            if (allow == Allow.OnlyUnique && GetValueRequests.Any(x => x.Guid == guid))
+            if (allow == Allow.OnlyUnique && GetValueRequests.Any(x => x.Guid.ToString()== guid.ToString()))
                 throw new CandidateRequestException();
             return guid;
         }
