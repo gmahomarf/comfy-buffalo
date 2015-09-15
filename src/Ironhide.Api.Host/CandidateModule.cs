@@ -131,12 +131,12 @@ namespace Ironhide.Api.Host
         dynamic VerifyValue(IEncodingAlgorithm algorithm, Guid guid)
         {
             GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);
-
+            RemoveFromPreviousWordRequestList(previousRequest);
+            
             if (!algorithm.GetType().Name.Contains(previousRequest.Algorithm.ToString()))
                 throw new CandidateRequestException("You're using the wrong algorithm for this list of words");
 
             string ourEncoded = algorithm.Encode(previousRequest.Words.ToArray());
-            Thread.Sleep(20000);
             return new {encoded = _base64Encoder.Encode(ourEncoded)};
         }
 
