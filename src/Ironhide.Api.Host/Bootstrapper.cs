@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;

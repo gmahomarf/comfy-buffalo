@@ -14,9 +14,9 @@ namespace Ironhide.Api.Specs
             () => { _shifter = new VowelShifter(); };
 
         Because of =
-            () => _result = _shifter.ShiftRight(new List<string> {"zoom", "tree", "byron", "sommardahl", "donaldo"}, 1);
+            () => _result = _shifter.ShiftRight(new List<string> { "hEllo", "bOok", "read", "NeEd", "paliNdromE" }, 1);
 
         It should_return_a_list_with_the_same_words_but_with_vowels_shifted_to_the_right_by_one =
-            () => _result.ShouldBeEquivalentTo(new List<string> { "zoom", "tree", "bryno", "smomradhal", "odnolad" });
+            () => _result.ShouldBeEquivalentTo(new List<string> { "ohlEl", "boOk", "raed", "NEed", "EplaNidrmo" });
     }
 }

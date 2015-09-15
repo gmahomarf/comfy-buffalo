@@ -73,6 +73,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlgorithmName.cs" />
+    <Compile Include="Algorithms\CaptainAmericaAlgorithm.cs" />
+    <Compile Include="Algorithms\HulkAlgorithm.cs" />
+    <Compile Include="Algorithms\IronManAlgorithm.cs" />
+    <Compile Include="Algorithms\ThorAlgorithm.cs" />
     <Compile Include="Allow.cs" />
     <Compile Include="AsciiValueDelimiterAdder.cs" />
     <Compile Include="Base64StringEncoder.cs" />
@@ -98,10 +103,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RootModule.cs" />
     <Compile Include="SlackHiringTeamNotifications.cs" />
-    <Compile Include="SuperSecretEncodingAlgorithm.cs" />
+    <Compile Include="StaticDictionary.cs" />
     <Compile Include="VerifyValueRequest.cs" />
     <Compile Include="VowelEncoder.cs" />
     <Compile Include="VowelShifter.cs" />
+    <Compile Include="WebhookException.cs" />
     <Compile Include="Winner.cs" />
     <Compile Include="WordSplitter.cs" />
   </ItemGroup>

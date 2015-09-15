@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Ironhide.Api.Host;
 
 namespace Ironhide.Api.Specs.Integration
 {
@@ -7,5 +8,6 @@ namespace Ironhide.Api.Specs.Integration
     {
         public List<string> Words { get; set; }
         public Int64 StartingFibonacciNumber { get; set; }
+        public AlgorithmName Algorithm { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace Ironhide.Api.Specs.Integration
     {
         static PostValueResponse _postValueResponse;
 
-        Establish context = () => _postValueResponse = CandidateApiTester.RunOnce();
+        Establish context = () => _postValueResponse = CandidateApiTester.RunOnce("http://requestb.in/1hb5qvz1");
 
         It should_not_fail = () => _postValueResponse.Status.Should().Be("Success");
     }

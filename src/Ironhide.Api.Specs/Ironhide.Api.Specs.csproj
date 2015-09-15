@@ -63,7 +63,10 @@
     <Compile Include="when_adding_delimiters_to_words.cs" />
     <Compile Include="when_alternating_caps_on_words_in_a_list.cs" />
     <Compile Include="when_base64_encoding_a_string.cs" />
-    <Compile Include="when_encoding_a_list_of_words.cs" />
+    <Compile Include="when_encoding_a_list_of_words_with_captain_america.cs" />
+    <Compile Include="when_encoding_a_list_of_words_with_iron_man.cs" />
+    <Compile Include="when_encoding_a_list_of_words_with_the_hulk.cs" />
+    <Compile Include="when_encoding_a_list_of_words_with_thor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="when_encoding_vowels.cs" />
     <Compile Include="when_generating_a_sequence_of_fibonacci_numbers.cs" />

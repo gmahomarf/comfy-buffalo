@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Ironhide.Api.Host;
+using Ironhide.Api.Host.Algorithms;
 using RestSharp;
 
 namespace Ironhide.Api.Specs.Integration
 {
     public static class CandidateApiTester
     {
-        public static PostValueResponse RunOnce()
+        public static PostValueResponse RunOnce(string webhookUrl)
         {
             string url = "http://localhost:6656";
             //string url = "http://internal-comfybuffalo-1-dev.apphb.com";
@@ -15,32 +16,66 @@ namespace Ironhide.Api.Specs.Integration
             Guid guid = Guid.NewGuid();
             var restRequest = new RestRequest("/values/" + guid);
             restRequest.AddHeader("Accept", "application/json");
-            restRequest.AddHeader("Content-Type", "application/json");                        
+            restRequest.AddHeader("Content-Type", "application/json");
             IRestResponse<Values> getValuesResponse = client.Get<Values>(restRequest);
             List<string> words = getValuesResponse.Data.Words;
             Int64 startingFibonacciNumber = getValuesResponse.Data.StartingFibonacciNumber;
+            AlgorithmName algorithmName = getValuesResponse.Data.Algorithm;
+            
+            var encoder = GetEncodingAlgarithm(algorithmName, startingFibonacciNumber);
 
-            var encoder =
-                new SuperSecretEncodingAlgorithm(new VowelEncoder(new FibonacciGenerator()),
-                    new VowelShifter(), new CapsAlternator(), new AsciiValueDelimiterAdder(), new WordSplitter(new StaticDictionary()));
-
-            string encode = encoder.Encode(startingFibonacciNumber, words.ToArray());
-            string s = new Base64StringEncoder().Encode(encode);
-            return PostEncodedValue(guid, s, client);
+            string encode = encoder.Encode(words.ToArray());
+            string base64EncodedString = new Base64StringEncoder().Encode(encode);
+            return PostEncodedValue(guid, base64EncodedString, client, algorithmName, webhookUrl);
         }
 
-        static PostValueResponse PostEncodedValue(Guid guid, string encode, RestClient client)
+        static IEncodingAlgorithm GetEncodingAlgarithm(AlgorithmName algorithmName, long startingFibonacciNumber)
         {
-            var request = new RestRequest("/values/" + guid) {RequestFormat = DataFormat.Json};
-            request.AddHeader("Content-Type", "application/json");            
+            IEncodingAlgorithm encoder;
+            switch (algorithmName)
+            {
+                case AlgorithmName.Thor:
+                    encoder =
+                        new ThorAlgorithm(startingFibonacciNumber, new VowelEncoder(new FibonacciGenerator()),
+                            new CapsAlternator(), new WordSplitter(new StaticDictionary()));
+                    break;
+                case AlgorithmName.CaptainAmerica:
+                    encoder =
+                        new CaptainAmericaAlgorithm(startingFibonacciNumber, new VowelEncoder(new FibonacciGenerator()),
+                            new VowelShifter(), new AsciiValueDelimiterAdder());
+                    break;
+
+                case AlgorithmName.IronMan:
+                    encoder =
+                        new IronManAlgorithm(new VowelShifter(),new AsciiValueDelimiterAdder());
+                    break;
+
+                case AlgorithmName.TheIncredibleHulk:
+                    encoder =
+                        new HulkAlgorithm(new VowelShifter());
+                    break;
+                default:
+                    throw new Exception("No matching algoriithm.");
+            }
+            return encoder;
+        }
+
+        static PostValueResponse PostEncodedValue(Guid guid, string encode, RestClient client,
+            AlgorithmName algorithmName, string webhookUrl)
+        {
+            var request = new RestRequest(string.Format("/values/{0}/{1}", guid, algorithmName))
+                          {
+                              RequestFormat =
+                                  DataFormat.Json
+                          };
+            request.AddHeader("Content-Type", "application/json");
             request.AddBody(new PostValueRequest
                             {
                                 EncodedValue = encode,
                                 EmailAddress = "byron@acklenavenue.com",
-                                WebhookUrl = "http://requestb.in/11qswdy1",
-                                RepoUrl= "http://github.com",
-                                Name= "Byron Sommardahl"
-
+                                WebhookUrl = webhookUrl,
+                                RepoUrl = "http://github.com",
+                                Name = "Byron Sommardahl"
                             });
             IRestResponse<PostValueResponse> restResponse = client.Post<PostValueResponse>(request);
             return restResponse.Data;
