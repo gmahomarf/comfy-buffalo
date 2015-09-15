@@ -10,8 +10,8 @@ namespace Ironhide.Api.Specs.Integration
     {
         public static PostValueResponse RunOnce(string webhookUrl)
         {
-            string url = "http://localhost:6656";
-            //string url = "http://internal-comfybuffalo-1-dev.apphb.com";
+            //string url = "http://localhost:6656";
+            string url = "http://internal-devchallenge-2-dev.apphb.com";
             var client = new RestClient(url);
             Guid guid = Guid.NewGuid();
             var restRequest = new RestRequest("/values/" + guid);
