@@ -16,7 +16,7 @@ namespace Ironhide.Api.Host
         const decimal RequiredSuccessCountForWin = 20;
         const double MillisecondsForWin = 10000;
 
-        static readonly List<GetValueRequests> GetValueRequests = new List<GetValueRequests>();
+        static readonly List<GetValueRequests> WordRequests = new List<GetValueRequests>();
 
         static readonly string[] AllWords =
         {
@@ -151,7 +151,7 @@ namespace Ironhide.Api.Host
             }
             double startingFibonacciNumber = GetRandomFibonacciStartingNumber();
             AlgorithmName randomAlgorithmName = GetRandomAlgorithmName();
-            GetValueRequests.Add(new GetValueRequests(guid, words, Convert.ToInt64(startingFibonacciNumber), randomAlgorithmName));
+            WordRequests.Add(new GetValueRequests(guid, words, Convert.ToInt64(startingFibonacciNumber), randomAlgorithmName));
             return Response.AsJson(new {words, startingFibonacciNumber, algorithm = randomAlgorithmName.ToString()});
         }
 
@@ -166,25 +166,20 @@ namespace Ironhide.Api.Host
         {
             try
             {
-                var reqBody = this.Bind<NewValueRequest>();
-
+                var reqBody = GetValidatedRequest();
                 string candidateEncoded = reqBody.EncodedValue;
-                if (string.IsNullOrEmpty(candidateEncoded)) throw new ArgumentNullException("encodedValue");
                 string emailAddress = reqBody.EmailAddress;
-                if (string.IsNullOrEmpty(emailAddress)) throw new ArgumentNullException("emailAddress");
                 string webhookUrl = reqBody.WebhookUrl;
-                if (string.IsNullOrEmpty(webhookUrl)) throw new ArgumentNullException("webhookUrl");
                 string name = reqBody.Name;
-                if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
                 string repoUrl = reqBody.RepoUrl;
-                if (string.IsNullOrEmpty(repoUrl)) throw new ArgumentNullException("repoUrl");
-
+                
                 GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);
 
                 if (!algorithm.GetType().Name.Contains(previousRequest.Algorithm.ToString()))
                     throw new CandidateRequestException("You're using the wrong algorithm for this list of words");
 
                 VerifyMatchingEncodedString(algorithm, previousRequest, candidateEncoded);
+                RemoveFromPreviousWordRequestList(guid);            
                 AddSuccessToList(emailAddress, webhookUrl);
 
                 int recentSuccesses = RecentSuccesses(emailAddress);
@@ -218,6 +213,23 @@ namespace Ironhide.Api.Host
             }
         }
 
+        static void RemoveFromPreviousWordRequestList(Guid guid)
+        {
+            WordRequests.Remove(WordRequests.First(x => x.Guid == guid));
+        }
+
+        NewValueRequest GetValidatedRequest()
+        {
+            var reqBody = this.Bind<NewValueRequest>();
+
+            if (string.IsNullOrEmpty(reqBody.EncodedValue)) throw new ArgumentNullException("encodedValue");
+            if (string.IsNullOrEmpty(reqBody.EmailAddress)) throw new ArgumentNullException("emailAddress");
+            if (string.IsNullOrEmpty(reqBody.WebhookUrl)) throw new ArgumentNullException("webhookUrl");
+            if (string.IsNullOrEmpty(reqBody.Name)) throw new ArgumentNullException("name");
+            if (string.IsNullOrEmpty(reqBody.RepoUrl)) throw new ArgumentNullException("repoUrl");
+            return reqBody;
+        }
+
         Response CrashAndBurn(Exception ex)
         {
             return Response.AsJson(new {status = "CrashAndBurn", message = ex.Message}, HttpStatusCode.BadRequest);
@@ -236,7 +248,7 @@ namespace Ironhide.Api.Host
         }
 
         void AddSuccessToList(string emailAddress, string webhookUrl)
-        {
+        {            
             CandidateSuccesses.Add(new CandidateSuccess(emailAddress, webhookUrl, DateTime.UtcNow));
         }
 
@@ -252,7 +264,7 @@ namespace Ironhide.Api.Host
 
         static GetValueRequests GetMatchingPreviousRequest(Guid guid)
         {
-            GetValueRequests previousRequest = GetValueRequests.FirstOrDefault(x => x.Guid == guid);
+            GetValueRequests previousRequest = WordRequests.FirstOrDefault(x => x.Guid == guid);
             if (previousRequest == null)
                 throw new CandidateRequestException("There were no previous requests for that guid.");
             return previousRequest;
@@ -301,7 +313,7 @@ namespace Ironhide.Api.Host
             Guid guid;
             if (!Guid.TryParse(guidString, out guid))
                 throw new CandidateRequestException("The guid provided was not valid.");
-            if (allow == Allow.OnlyUnique && GetValueRequests.Any(x => x.Guid.ToString() == guid.ToString()))
+            if (allow == Allow.OnlyUnique && WordRequests.Any(x => x.Guid.ToString() == guid.ToString()))
                 throw new CandidateRequestException("The guid needed to be unique, but has been used before.");
             return guid;
         }
