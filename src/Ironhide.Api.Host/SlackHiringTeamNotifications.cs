@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SlackClient;
@@ -14,7 +15,7 @@ namespace Ironhide.Api.Host
             _slackClient = new SlackLogger();
         }
 
-        public async Task Notify(string emailAddress, string name, string repoUrl, string code)
+        public void Notify(string emailAddress, string name, string repoUrl, string code, TimeSpan timeToWinFromFirstSuccess)
         {
             const string message =
                 "Hi future teammates! I just finished the dev challenge. BTW, what are you guys smoking over there?? I should be sending the hiring team an email soon with a link to my site with the secret code (that matches below).";
@@ -39,11 +40,16 @@ namespace Ironhide.Api.Host
                                               {
                                                   title = "My Code",
                                                   value = repoUrl
+                                              },
+                                              new AttachmentField
+                                              {
+                                                  title = "Milliseconds to Win",
+                                                  value = timeToWinFromFirstSuccess.TotalMilliseconds.ToString()
                                               }
                                           }
                              };
 
-            var sendMessage = await _slackClient.Log(new SlackPost()
+            var sendMessage = _slackClient.Log(new SlackPost()
                                                      {
                                                          attachments = new List<SlackPostAttachment> {attachment},
                                                          channel = "#hiring",

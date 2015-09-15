@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
+using System;
 
 namespace Ironhide.Api.Host
 {
     public interface IHiringTeamNotifier
     {
-        Task Notify(string emailAddress, string name, string repoUrl, string code);
+        void Notify(string emailAddress, string name, string repoUrl, string code, TimeSpan timeToWinFromFirstSuccess);
     }
 }

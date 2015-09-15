@@ -182,8 +182,10 @@ namespace Ironhide.Api.Host
                 VerifyMatchingEncodedString(algorithm, previousRequest, candidateEncoded);
                 AddSuccessToList(emailAddress, webhookUrl);
 
-                int recentSuccesses = RecentSuccesses(emailAddress);
-                bool isWinner = recentSuccesses >= RequiredSuccessCountForWin;
+                var candidateSuccesses = RecentSuccesses(emailAddress).ToList();
+                TimeSpan timeToWinFromFirstSuccess = candidateSuccesses.Last().Time - candidateSuccesses.First().Time;
+                int recentSuccessCount = candidateSuccesses.Count();
+                bool isWinner = recentSuccessCount >= RequiredSuccessCountForWin;
                 bool repeatWinner =
                     Winners.Any(x => x.EmailAddress == emailAddress && x.Time > DateTime.UtcNow.AddMinutes(-60));
 
@@ -192,13 +194,13 @@ namespace Ironhide.Api.Host
                     string randomFibonacciStartingNumber = GetRandomFibonacciStartingNumber().ToString();
                     SendWebhook(webhookUrl, randomFibonacciStartingNumber);
                     var winner = new Winner(emailAddress, name, repoUrl, DateTime.UtcNow);
-                    NotifyHiringTeam(winner, randomFibonacciStartingNumber);
-                    Winners.Add(winner);
-                    Thread.Sleep(4000);
+                    Thread.Sleep(5000);
+                    NotifyHiringTeam(winner, randomFibonacciStartingNumber, timeToWinFromFirstSuccess);
+                    Winners.Add(winner);                    
                 }
                 string message = repeatWinner
                     ? "Please wait 60 minutes before winning again to get the webhook post."
-                    : isWinner ? WinMessage() : SingleSuccessMessage(recentSuccesses);
+                    : isWinner ? WinMessage() : SingleSuccessMessage(recentSuccessCount);
                 string status = (isWinner ? PostAttempt.Winner : PostAttempt.Success).ToString();
 
                 return Response.AsJson(new {status, message});
@@ -235,9 +237,9 @@ namespace Ironhide.Api.Host
             return Response.AsJson(new {status = "CrashAndBurn", message = ex.Message}, HttpStatusCode.BadRequest);
         }
 
-        void NotifyHiringTeam(Winner winner, string secretCode)
+        void NotifyHiringTeam(Winner winner, string secretCode, TimeSpan timeToWinFromFirstSuccess)
         {
-            _notifier.Notify(winner.EmailAddress, winner.Name, winner.RepoUrl, secretCode);
+            _notifier.Notify(winner.EmailAddress, winner.Name, winner.RepoUrl, secretCode, timeToWinFromFirstSuccess);
         }
 
         double GetRandomFibonacciStartingNumber()
@@ -282,14 +284,15 @@ namespace Ironhide.Api.Host
                 MillisecondsForWin, RequiredSuccessCountForWin - recentSuccesses);
         }
 
-        int RecentSuccesses(string emailAddress)
+        IEnumerable<CandidateSuccess> RecentSuccesses(string emailAddress)
         {
             DateTime minimumWinTime = DateTime.UtcNow.AddMilliseconds(-1*MillisecondsForWin);
             IEnumerable<CandidateSuccess> recentSuccesses =
                 CandidateSuccesses.Where(x => x.EmailAddress == emailAddress
-                                              && x.Time >= minimumWinTime);
+                                              && x.Time >= minimumWinTime)
+                    .OrderBy(x => x.Time);
 
-            return recentSuccesses.Count();
+            return recentSuccesses;
         }
 
         void SendWebhook(string webhookUrl, string randomFibonacciStartingNumber)

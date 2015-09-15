@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using System.Threading;
 using RestSharp;
 
 namespace SlackClient
@@ -13,11 +13,11 @@ namespace SlackClient
                 new RestClient("https://acklen.slack.com/services/hooks/incoming-webhook?token=E4kWKWySUvdHjodYm8Pf9oUZ");
         }
 
-        public async Task<SlackLogResult> Log(SlackPost post)
+        public SlackLogResult Log(SlackPost post)
         {
             var restRequest = new RestRequest {RequestFormat = DataFormat.Json};
             restRequest.AddBody(post);
-            IRestResponse restResponse = await _restClient.ExecutePostTaskAsync(restRequest);
+            IRestResponse restResponse = _restClient.Post(restRequest);
             return new SlackLogResult(restResponse.StatusCode, restResponse.Content);
         }
     }
