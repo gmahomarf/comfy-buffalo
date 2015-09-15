@@ -185,7 +185,7 @@ namespace Ironhide.Api.Host
                 int recentSuccesses = RecentSuccesses(emailAddress);
                 bool isWinner = recentSuccesses >= RequiredSuccessCountForWin;
                 bool repeatWinner =
-                    Winners.Any(x => x.EmailAddress == emailAddress && x.Time > DateTime.UtcNow.AddMinutes(-10));
+                    Winners.Any(x => x.EmailAddress == emailAddress && x.Time > DateTime.UtcNow.AddMinutes(-60));
 
                 if (isWinner && !repeatWinner)
                 {
@@ -197,7 +197,7 @@ namespace Ironhide.Api.Host
                     Thread.Sleep(4000);
                 }
                 string message = repeatWinner
-                    ? "Please wait 10 minutes before winning again to get the webhook post."
+                    ? "Please wait 60 minutes before winning again to get the webhook post."
                     : isWinner ? WinMessage() : SingleSuccessMessage(recentSuccesses);
                 string status = (isWinner ? PostAttempt.Winner : PostAttempt.Success).ToString();
 
