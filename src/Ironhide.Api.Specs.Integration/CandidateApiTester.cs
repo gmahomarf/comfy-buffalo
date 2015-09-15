@@ -52,7 +52,7 @@ namespace Ironhide.Api.Specs.Integration
 
                 case AlgorithmName.TheIncredibleHulk:
                     encoder =
-                        new HulkAlgorithm(new VowelShifter());
+                        new TheIncredibleHulkAlgorithm(new VowelShifter());
                     break;
                 default:
                     throw new Exception("No matching algoriithm.");

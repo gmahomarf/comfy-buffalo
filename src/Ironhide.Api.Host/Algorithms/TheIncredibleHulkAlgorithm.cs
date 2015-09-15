@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace Ironhide.Api.Host.Algorithms
 {
-    public class HulkAlgorithm : IEncodingAlgorithm
+    public class TheIncredibleHulkAlgorithm : IEncodingAlgorithm
     {
         readonly IVowelShifter _vowelShifter;
         
-        public HulkAlgorithm(IVowelShifter vowelShifter)
+        public TheIncredibleHulkAlgorithm(IVowelShifter vowelShifter)
         {
             _vowelShifter = vowelShifter;
         }

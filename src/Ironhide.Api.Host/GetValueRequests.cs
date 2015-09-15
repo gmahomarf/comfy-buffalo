@@ -8,12 +8,14 @@ namespace Ironhide.Api.Host
         public Guid Guid { get; private set; }
         public List<string> Words { get; private set; }
         public Int64 StartingFibonacciNumber { get; private set; }
+        public AlgorithmName Algorithm { get; private set; }
 
-        public GetValueRequests(Guid guid, List<string> words, Int64 startingFibonacciNumber)
+        public GetValueRequests(Guid guid, List<string> words, Int64 startingFibonacciNumber, AlgorithmName algorithm)
         {
             Guid = guid;
             Words = words;
             StartingFibonacciNumber = startingFibonacciNumber;
+            Algorithm = algorithm;
         }
     }
 }

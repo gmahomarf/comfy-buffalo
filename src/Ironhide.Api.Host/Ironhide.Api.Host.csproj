@@ -75,7 +75,7 @@
   <ItemGroup>
     <Compile Include="AlgorithmName.cs" />
     <Compile Include="Algorithms\CaptainAmericaAlgorithm.cs" />
-    <Compile Include="Algorithms\HulkAlgorithm.cs" />
+    <Compile Include="Algorithms\TheIncredibleHulkAlgorithm.cs" />
     <Compile Include="Algorithms\IronManAlgorithm.cs" />
     <Compile Include="Algorithms\ThorAlgorithm.cs" />
     <Compile Include="Allow.cs" />

@@ -35,7 +35,7 @@ namespace Ironhide.Api.Host
 
         readonly FibonacciGenerator _fibonacciGenerator = new FibonacciGenerator();
 
-        readonly HulkAlgorithm _hulkAlgorithm = new HulkAlgorithm(new VowelShifter());
+        readonly TheIncredibleHulkAlgorithm _theIncredibleHulkAlgorithm = new TheIncredibleHulkAlgorithm(new VowelShifter());
 
         readonly IronManAlgorithm _ironManAlgorithm = new IronManAlgorithm(new VowelShifter(), new AsciiValueDelimiterAdder());
 
@@ -82,7 +82,7 @@ namespace Ironhide.Api.Host
         dynamic VerifyHulk(dynamic p)
         {
             Guid guid = GetGuid((string) p.guid, Allow.Duplicates);
-            return VerifyValue(_hulkAlgorithm, guid);
+            return VerifyValue(_theIncredibleHulkAlgorithm, guid);
         }
 
         dynamic VerifyThor(dynamic p)
@@ -112,14 +112,13 @@ namespace Ironhide.Api.Host
         dynamic PostHulk(dynamic p)
         {
             Guid guid = GetGuid((string) p.guid, Allow.Duplicates);
-            return PostValue(_hulkAlgorithm, guid);
+            return PostValue(_theIncredibleHulkAlgorithm, guid);
         }
 
         dynamic PostThor(dynamic p)
         {
             Guid guid = GetGuid((string) p.guid, Allow.Duplicates);
-            GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);
-
+            GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);            
             _thorAlgorithm = new ThorAlgorithm(previousRequest.StartingFibonacciNumber,
                 new VowelEncoder(new FibonacciGenerator()),
                 CapsAlternator, new WordSplitter(new StaticDictionary()));
@@ -132,6 +131,10 @@ namespace Ironhide.Api.Host
         dynamic VerifyValue(IEncodingAlgorithm algorithm, Guid guid)
         {
             GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);
+
+            if (!algorithm.GetType().Name.Contains(previousRequest.Algorithm.ToString()))
+                throw new CandidateRequestException("You're using the wrong algorithm for this list of words");
+
             string ourEncoded = algorithm.Encode(previousRequest.Words.ToArray());
             Thread.Sleep(20000);
             return new {encoded = _base64Encoder.Encode(ourEncoded)};
@@ -147,16 +150,16 @@ namespace Ironhide.Api.Host
                 words.Add(CapsAlternator.Alternate(AllWords).ToArray()[rnd.Next(0, AllWords.Length - 1)]);
             }
             double startingFibonacciNumber = GetRandomFibonacciStartingNumber();
-            GetValueRequests.Add(new GetValueRequests(guid, words, Convert.ToInt64(startingFibonacciNumber)));
-            return Response.AsJson(new {words, startingFibonacciNumber, algorithm = GetRandomAlgorithmName()});
+            AlgorithmName randomAlgorithmName = GetRandomAlgorithmName();
+            GetValueRequests.Add(new GetValueRequests(guid, words, Convert.ToInt64(startingFibonacciNumber), randomAlgorithmName));
+            return Response.AsJson(new {words, startingFibonacciNumber, algorithm = randomAlgorithmName.ToString()});
         }
 
-        string GetRandomAlgorithmName()
+        AlgorithmName GetRandomAlgorithmName()
         {
             var rnd = new Random();
-            string[] names = Enum.GetNames(typeof (AlgorithmName));
             const int skipUnknownName = 1;
-            return names[rnd.Next(skipUnknownName, names.Length - 1)];
+            return (AlgorithmName) rnd.Next(skipUnknownName, Enum.GetNames(typeof (AlgorithmName)).Length);
         }
 
         dynamic PostValue(IEncodingAlgorithm algorithm, Guid guid)
@@ -177,6 +180,10 @@ namespace Ironhide.Api.Host
                 if (string.IsNullOrEmpty(repoUrl)) throw new ArgumentNullException("repoUrl");
 
                 GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);
+
+                if (!algorithm.GetType().Name.Contains(previousRequest.Algorithm.ToString()))
+                    throw new CandidateRequestException("You're using the wrong algorithm for this list of words");
+
                 VerifyMatchingEncodedString(algorithm, previousRequest, candidateEncoded);
                 AddSuccessToList(emailAddress, webhookUrl);
 
@@ -192,6 +199,7 @@ namespace Ironhide.Api.Host
                     var winner = new Winner(emailAddress, name, repoUrl, DateTime.UtcNow);
                     NotifyHiringTeam(winner, randomFibonacciStartingNumber);
                     Winners.Add(winner);
+                    Thread.Sleep(4000);
                 }
                 string message = repeatWinner
                     ? "Please wait 10 minutes before winning again to get the webhook post."
@@ -202,12 +210,17 @@ namespace Ironhide.Api.Host
             }
             catch (WebhookException ex)
             {
-                return Response.AsJson(new {status = "CrashAndBurn", message = ex.Message}, HttpStatusCode.BadRequest);
+                return CrashAndBurn(ex);
             }
             catch (CandidateRequestException ex)
             {
-                return Response.AsJson(new {status = "CrashAndBurn", message = ex.Message}, HttpStatusCode.BadRequest);
+                return CrashAndBurn(ex);
             }
+        }
+
+        Response CrashAndBurn(Exception ex)
+        {
+            return Response.AsJson(new {status = "CrashAndBurn", message = ex.Message}, HttpStatusCode.BadRequest);
         }
 
         void NotifyHiringTeam(Winner winner, string secretCode)

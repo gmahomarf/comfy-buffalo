@@ -15,7 +15,7 @@ namespace Ironhide.Api.Specs
         Establish context =
             () =>
             {
-                _encodingAlgorithm = new HulkAlgorithm(new VowelShifter());
+                _encodingAlgorithm = new TheIncredibleHulkAlgorithm(new VowelShifter());
                 _listOfWords = new[] { "superman", "don", "byron", "sommardahl" };
                 _expectedEncodedString = "spuremna*smomradhal*dno*bryno";
             };
