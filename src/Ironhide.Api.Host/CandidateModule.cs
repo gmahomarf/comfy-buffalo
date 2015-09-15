@@ -179,7 +179,7 @@ namespace Ironhide.Api.Host
                     throw new CandidateRequestException("You're using the wrong algorithm for this list of words");
 
                 RemoveFromPreviousWordRequestList(previousRequest);
-                VerifyMatchingEncodedString(algorithm, previousRequest, candidateEncoded);
+                VerifyMatchingEncodedString(algorithm, previousRequest, candidateEncoded, emailAddress);
                 AddSuccessToList(emailAddress, webhookUrl);
 
                 var candidateSuccesses = RecentSuccesses(emailAddress).ToList();
@@ -255,13 +255,16 @@ namespace Ironhide.Api.Host
         }
 
         void VerifyMatchingEncodedString(IEncodingAlgorithm algorithm, GetValueRequests previousRequest,
-            string candidateEncoded)
+            string candidateEncoded, string emailAddress)
         {
             string ourEncoded = algorithm.Encode(previousRequest.Words.ToArray());
             string b64Encoded = _base64Encoder.Encode(ourEncoded);
             bool candidateFailedToProvideCorrectEncodedString = candidateEncoded != b64Encoded;
             if (candidateFailedToProvideCorrectEncodedString)
+            {
+                CandidateSuccesses.RemoveAll(x => x.EmailAddress == emailAddress);
                 throw new CandidateRequestException("The encoded string did not match.");
+            }
         }
 
         static GetValueRequests GetMatchingPreviousRequest(Guid guid)
