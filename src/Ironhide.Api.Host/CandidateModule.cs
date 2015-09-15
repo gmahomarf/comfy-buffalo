@@ -178,8 +178,8 @@ namespace Ironhide.Api.Host
                 if (!algorithm.GetType().Name.Contains(previousRequest.Algorithm.ToString()))
                     throw new CandidateRequestException("You're using the wrong algorithm for this list of words");
 
+                RemoveFromPreviousWordRequestList(previousRequest);
                 VerifyMatchingEncodedString(algorithm, previousRequest, candidateEncoded);
-                RemoveFromPreviousWordRequestList(guid);            
                 AddSuccessToList(emailAddress, webhookUrl);
 
                 int recentSuccesses = RecentSuccesses(emailAddress);
@@ -213,9 +213,9 @@ namespace Ironhide.Api.Host
             }
         }
 
-        static void RemoveFromPreviousWordRequestList(Guid guid)
+        static void RemoveFromPreviousWordRequestList(GetValueRequests req)
         {
-            WordRequests.Remove(WordRequests.First(x => x.Guid == guid));
+            WordRequests.Remove(req);
         }
 
         NewValueRequest GetValidatedRequest()
