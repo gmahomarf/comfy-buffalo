@@ -31,6 +31,7 @@ namespace Ironhide.Api.Host
         static readonly List<CandidateSuccess> CandidateSuccesses = new List<CandidateSuccess>();
         static readonly List<Winner> Winners = new List<Winner>();
         static readonly CapsAlternator CapsAlternator = new CapsAlternator();
+        static readonly ConsonantCapsAlternator ConsonantCapsAlternator = new ConsonantCapsAlternator();
         readonly Base64StringEncoder _base64Encoder = new Base64StringEncoder();
 
         readonly FibonacciGenerator _fibonacciGenerator = new FibonacciGenerator();
@@ -92,7 +93,7 @@ namespace Ironhide.Api.Host
 
             _thorAlgorithm = new ThorAlgorithm(previousRequest.StartingFibonacciNumber,
                 new VowelEncoder(new FibonacciGenerator()),
-                CapsAlternator, new WordSplitter(new StaticDictionary()));
+                ConsonantCapsAlternator, new WordSplitter(new StaticDictionary()));
 
             return VerifyValue(_thorAlgorithm, guid);
         }
@@ -121,7 +122,7 @@ namespace Ironhide.Api.Host
             GetValueRequests previousRequest = GetMatchingPreviousRequest(guid);            
             _thorAlgorithm = new ThorAlgorithm(previousRequest.StartingFibonacciNumber,
                 new VowelEncoder(new FibonacciGenerator()),
-                CapsAlternator, new WordSplitter(new StaticDictionary()));
+                ConsonantCapsAlternator, new WordSplitter(new StaticDictionary()));
 
             return
                 PostValue(

@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="when_adding_delimiters_to_words.cs" />
+    <Compile Include="when_alternating_caps_on_consonants_in_words_in_a_list.cs" />
     <Compile Include="when_alternating_caps_on_words_in_a_list.cs" />
     <Compile Include="when_base64_encoding_a_string.cs" />
     <Compile Include="when_encoding_a_list_of_words_with_captain_america.cs" />

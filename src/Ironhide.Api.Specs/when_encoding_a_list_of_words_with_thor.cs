@@ -17,9 +17,9 @@ namespace Ironhide.Api.Specs
             () =>
             {
                 _encodingAlgorithm = new ThorAlgorithm(FirstFibonacciNumber, new VowelEncoder(new FibonacciGenerator()),
-                    new CapsAlternator(), new WordSplitter(new StaticDictionary()));
+                    new ConsonantCapsAlternator(), new WordSplitter(new StaticDictionary()));
                 _listOfWords = new[] {"superman", "don", "byron", "sommardahl"};
-                _expectedEncodedString = "b3r5n*D8N*m13n*S21Mm34rD55Hl*S89P144R";
+                _expectedEncodedString = "b3R5n*D8n*M13n*S21mM34rD55hL*s89P144r";
             };
 
         Because of =

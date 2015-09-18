@@ -37,7 +37,7 @@ namespace Ironhide.Api.Specs.Integration
                 case AlgorithmName.Thor:
                     encoder =
                         new ThorAlgorithm(startingFibonacciNumber, new VowelEncoder(new FibonacciGenerator()),
-                            new CapsAlternator(), new WordSplitter(new StaticDictionary()));
+                            new ConsonantCapsAlternator(), new WordSplitter(new StaticDictionary()));
                     break;
                 case AlgorithmName.CaptainAmerica:
                     encoder =

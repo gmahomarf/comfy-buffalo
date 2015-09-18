@@ -86,6 +86,7 @@
     <Compile Include="CandidateRequestException.cs" />
     <Compile Include="CandidateSuccess.cs" />
     <Compile Include="CapsAlternator.cs" />
+    <Compile Include="ConsonantCapsAlternator.cs" />
     <Compile Include="FibonacciGenerator.cs" />
     <Compile Include="GetValueRequests.cs" />
     <Compile Include="ICapsAlternator.cs" />

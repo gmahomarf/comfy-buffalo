@@ -15,6 +15,6 @@ namespace Ironhide.Api.Specs
 
         It should_return_the_correct_sequence =
             () => _result.Select(x=> (int)x)
-                .ToArray().Should().Equal(new int[] {1, 1, 2, 3, 5, 8, 13, 21, 34, 55});
+                .ToArray().Should().Equal(new int[] {2, 3, 5, 8, 13, 21, 34, 55, 89, 144});
     }
 }

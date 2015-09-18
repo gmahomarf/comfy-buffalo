@@ -9,13 +9,13 @@ namespace Ironhide.Api.Host
         {
             for (int i = 0; i < count; i++)
             {
-                yield return Fib(i);
+                yield return Fib(i + 2);
             }
         }
 
         public Int64 GetNext(double previousNumber)
         {
-            for (int i = 0; i < int.MaxValue; i++)
+            for (int i = 2; i < int.MaxValue; i++)
             {
                 long num = Fib(i);
                 if (Convert.ToInt64(previousNumber) == Convert.ToInt64(num))
