@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -16,7 +17,7 @@ namespace Ironhide.Api.Host
         const decimal RequiredSuccessCountForWin = 20;
         const double MillisecondsForWin = 10000;
 
-        static readonly List<GetValueRequests> WordRequests = new List<GetValueRequests>();
+        static readonly ConcurrentDictionary<string, GetValueRequests> WordRequests = new ConcurrentDictionary<string, GetValueRequests>();
 
         static readonly string[] AllWords =
         {
@@ -143,7 +144,8 @@ namespace Ironhide.Api.Host
 
         dynamic GetValues(dynamic p)
         {
-            Guid guid = GetGuid((string) p.guid);
+            var guidString = (string) p.guid;
+            Guid guid = GetGuid(guidString);
             var rnd = new Random();
             var words = new List<string>();
             for (int i = 0; i < MaxWords; i++)
@@ -152,7 +154,7 @@ namespace Ironhide.Api.Host
             }
             double startingFibonacciNumber = GetRandomFibonacciStartingNumber();
             AlgorithmName randomAlgorithmName = GetRandomAlgorithmName();
-            WordRequests.Add(new GetValueRequests(guid, words, Convert.ToInt64(startingFibonacciNumber), randomAlgorithmName));
+            WordRequests.TryAdd(guidString, new GetValueRequests(guid, words, Convert.ToInt64(startingFibonacciNumber), randomAlgorithmName));
             return Response.AsJson(new {words, startingFibonacciNumber, algorithm = randomAlgorithmName.ToString()});
         }
 
@@ -218,7 +220,8 @@ namespace Ironhide.Api.Host
 
         static void RemoveFromPreviousWordRequestList(GetValueRequests req)
         {
-            WordRequests.Remove(req);
+            GetValueRequests removedRequest;
+            WordRequests.TryRemove(req.Guid.ToString(), out removedRequest);
         }
 
         NewValueRequest GetValidatedRequest()
@@ -270,8 +273,10 @@ namespace Ironhide.Api.Host
 
         static GetValueRequests GetMatchingPreviousRequest(Guid guid)
         {
-            GetValueRequests previousRequest = WordRequests.FirstOrDefault(x => x.Guid == guid);
-            if (previousRequest == null)
+            GetValueRequests previousRequest;
+            var guidString = guid.ToString();
+            var gotValue = WordRequests.TryGetValue(guidString, out previousRequest);
+            if (!gotValue || previousRequest == null)
                 throw new CandidateRequestException("There were no previous requests for that guid.");
             return previousRequest;
         }
@@ -318,9 +323,10 @@ namespace Ironhide.Api.Host
         static Guid GetGuid(string guidString, Allow allow = Allow.OnlyUnique)
         {
             Guid guid;
+            GetValueRequests value;
             if (!Guid.TryParse(guidString, out guid))
                 throw new CandidateRequestException("The guid provided was not valid.");
-            if (allow == Allow.OnlyUnique && WordRequests.Any(x => x.Guid.ToString() == guid.ToString()))
+            if (allow == Allow.OnlyUnique && WordRequests.TryGetValue(guid.ToString(), out value))
                 throw new CandidateRequestException("The guid needed to be unique, but has been used before.");
             return guid;
         }
